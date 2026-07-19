@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HelpPC — Webové aplikace &amp; knihovny pro vývojáře</title>
+  <meta name="description" id="meta-desc" content="HelpPC — otevřený software, znovupoužitelné knihovny a nástroje pro vývojáře. Rozcestník na GitHub, Packagist a projekty.">
+  <meta name="theme-color" content="#030713">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon-180.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="HelpPC — Web apps & libraries for developers">
+  <meta property="og:description" content="Open source, reusable libraries and tools that help you build.">
+  <meta property="og:image" content="assets/helppc-og.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    :root {
+      --blue: #1769FF; --blue-400: #4C8DFF; --blue-200: #A8C6FF;
+      --ink: #080B10; --dark: #030713; --white: #FFFFFF;
+      --canvas: #F7F9FC; --muted: #667085; --line: #D9E0EA;
+      --radius: 18px; --shadow: 0 18px 50px rgba(8,11,16,.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; color: var(--ink); background: var(--white);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.55; -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; max-width: 100%; }
+    a { color: var(--blue); }
+    .wrap { width: min(1140px, calc(100% - 40px)); margin-inline: auto; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .eyebrow { color: var(--blue-400); font-size: .78rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 18px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.05; letter-spacing: -.04em; margin-bottom: 14px; }
+    h3 { font-size: 1.08rem; margin-bottom: 8px; letter-spacing: -.01em; }
+
+    /* Top bar */
+    .bar {
+      position: sticky; top: 0; z-index: 30; backdrop-filter: blur(16px);
+      background: rgba(3,7,19,.72); border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .bar .wrap { display: flex; align-items: center; gap: 16px; padding: 12px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand img { height: 26px; width: auto; }
+    .brand span { color: #fff; font-weight: 800; letter-spacing: -.02em; font-size: 1.02rem; }
+    .bar .spacer { flex: 1; }
+    .bar a.ghost { color: #cdd5e0; text-decoration: none; font-weight: 700; font-size: .9rem; }
+    .bar a.ghost:hover { color: #fff; }
+    .lang { display: inline-flex; border: 1px solid rgba(255,255,255,.18); border-radius: 999px; overflow: hidden; }
+    .lang button {
+      appearance: none; border: 0; background: transparent; color: #aeb8c6; cursor: pointer;
+      font: inherit; font-weight: 800; font-size: .78rem; letter-spacing: .04em; padding: 6px 12px;
+    }
+    .lang button[aria-pressed="true"] { background: var(--blue); color: #fff; }
+
+    /* Hero */
+    .hero {
+      position: relative; overflow: hidden; color: #fff; padding: 96px 0 104px;
+      background: radial-gradient(circle at 82% 18%, rgba(23,105,255,.24), transparent 34%),
+                  linear-gradient(135deg, #030713 0%, #080d18 100%);
+    }
+    .hero .logo { width: min(560px, 92%); height: auto; margin: 6px 0 30px; }
+    .hero .lead { font-size: clamp(1.1rem, 1.9vw, 1.42rem); color: #b8c0cc; max-width: 660px; margin-bottom: 34px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 14px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 800;
+      font-size: .98rem; padding: 14px 22px; border-radius: 12px; transition: transform .12s ease, background .12s ease;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-primary:hover { background: #2f7bff; }
+    .btn-ghost { background: rgba(255,255,255,.06); color: #fff; border: 1px solid rgba(255,255,255,.16); }
+    .btn-ghost:hover { background: rgba(255,255,255,.12); }
+    /* Diagonal "forward" motif */
+    .motif { position: absolute; background: var(--blue); opacity: .9;
+      clip-path: polygon(0 0, 70% 0, 100% 50%, 70% 100%, 0 100%, 30% 50%); pointer-events: none; }
+    .motif.m1 { width: 190px; aspect-ratio: 1.6; right: -40px; top: 64px; opacity: .16; }
+    .motif.m2 { width: 120px; aspect-ratio: 1.6; right: 150px; bottom: -30px; background: var(--blue-400); opacity: .12; }
+
+    /* Sections */
+    section { padding: 88px 0; }
+    .section-head { max-width: 720px; margin-bottom: 40px; }
+    .section-head p { color: var(--muted); font-size: 1.08rem; margin: 0; }
+
+    .about { background: var(--canvas); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+    .value { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; }
+    .value .num {
+      display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 11px;
+      background: var(--blue); color: #fff; font-weight: 900; margin-bottom: 18px;
+    }
+    .value p { color: var(--muted); margin: 0; }
+
+    /* Rozcestník */
+    .links-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px; }
+    .link-card {
+      position: relative; display: block; text-decoration: none; color: var(--ink);
+      border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; background: #fff;
+      box-shadow: var(--shadow); transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+    }
+    .link-card:hover { transform: translateY(-3px); border-color: var(--blue-200); box-shadow: 0 22px 60px rgba(23,105,255,.14); }
+    .link-card .ico {
+      display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px;
+      background: #eef4ff; color: var(--blue); margin-bottom: 18px;
+    }
+    .link-card .ico svg { width: 24px; height: 24px; }
+    .link-card h3 { display: flex; align-items: center; gap: 10px; }
+    .link-card p { color: var(--muted); margin: 0 0 4px; }
+    .link-card .go { color: var(--blue); font-weight: 800; font-size: .9rem; margin-top: 16px; display: inline-flex; align-items: center; gap: 6px; }
+    .pill { font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--blue); background: #eef4ff; border: 1px solid var(--blue-200); padding: 3px 8px; border-radius: 999px; }
+
+    /* Footer */
+    footer { background: var(--dark); color: #fff; padding: 54px 0; }
+    footer .wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; }
+    footer img { height: 30px; width: auto; }
+    footer .spacer { flex: 1; }
+    footer p { margin: 0; color: #8b97a8; font-size: .92rem; }
+    footer a { color: #cdd5e0; text-decoration: none; font-weight: 700; }
+    footer a:hover { color: #fff; }
+
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .links-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 28px, 1140px); }
+      section { padding: 66px 0; }
+      .hero { padding: 72px 0 80px; }
+      .bar a.ghost { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="HelpPC">
+        <img src="assets/helppc-symbol-white.svg" alt="">
+        <span>HelpPC</span>
+      </a>
+      <div class="spacer"></div>
+      <a class="ghost" href="https://github.com/helppc" target="_blank" rel="noopener">GitHub</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="cs" aria-pressed="true">CS</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero" id="top">
+    <span class="motif m1"></span>
+    <span class="motif m2"></span>
+    <div class="wrap">
+      <div class="eyebrow" data-cs="Webové aplikace &amp; knihovny pro vývojáře" data-en="Web apps &amp; libraries for developers">Webové aplikace &amp; knihovny pro vývojáře</div>
+      <h1 class="sr-only">HelpPC</h1>
+      <img class="logo" src="assets/helppc-logo-dark.svg" alt="HelpPC" width="600" height="160">
+      <p class="lead" data-cs="Otevřený software, znovupoužitelné knihovny a nástroje, které pomáhají stavět — hlavně v ekosystému PHP a Symfony." data-en="Open source, reusable libraries and tools that help you build — mainly in the PHP and Symfony ecosystem.">Otevřený software, znovupoužitelné knihovny a nástroje, které pomáhají stavět — hlavně v ekosystému PHP a Symfony.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/helppc" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.3-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.2-3.1-.12-.3-.52-1.48.11-3.08 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.82 0c2.22-1.5 3.19-1.18 3.19-1.18.63 1.6.24 2.78.12 3.07.75.82 1.2 1.85 1.2 3.11 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>
+          <span data-cs="Prozkoumat GitHub" data-en="Explore GitHub">Prozkoumat GitHub</span>
+        </a>
+        <a class="btn btn-ghost" href="#rozcestnik">
+          <span data-cs="Rozcestník" data-en="Where to go">Rozcestník</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="about" id="o-nas">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow" data-cs="01 — Co je HelpPC" data-en="01 — About HelpPC">01 — Co je HelpPC</div>
+          <h2 data-cs="Technologie, které pomáhají stavět" data-en="Technology that helps you build">Technologie, které pomáhají stavět</h2>
+          <p data-cs="HelpPC je značka pro webové aplikace a knihovny pro vývojáře. Monogram propojuje písmena H a P: modrá část je pevný technický základ, kontrastní P přináší pohyb a směr." data-en="HelpPC is a brand for web applications and developer libraries. The monogram joins the letters H and P: the blue part is a solid technical foundation, the contrasting P brings movement and direction.">HelpPC je značka pro webové aplikace a knihovny pro vývojáře. Monogram propojuje písmena H a P: modrá část je pevný technický základ, kontrastní P přináší pohyb a směr.</p>
+        </div>
+        <div class="grid-3">
+          <article class="value">
+            <div class="num">01</div>
+            <h3 data-cs="Pomoc" data-en="Help">Pomoc</h3>
+            <p data-cs="Nástroje, které šetří čas a zjednodušují práci." data-en="Tools that save time and simplify work.">Nástroje, které šetří čas a zjednodušují práci.</p>
+          </article>
+          <article class="value">
+            <div class="num">02</div>
+            <h3 data-cs="Řešení" data-en="Solutions">Řešení</h3>
+            <p data-cs="Funkční webové aplikace a znovupoužitelné knihovny." data-en="Working web apps and reusable libraries.">Funkční webové aplikace a znovupoužitelné knihovny.</p>
+          </article>
+          <article class="value">
+            <div class="num">03</div>
+            <h3 data-cs="Pokrok" data-en="Progress">Pokrok</h3>
+            <p data-cs="Směr vpřed a dlouhodobě udržitelný vývoj." data-en="Forward direction and sustainable development.">Směr vpřed a dlouhodobě udržitelný vývoj.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="rozcestnik">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow" data-cs="02 — Rozcestník" data-en="02 — Where to go">02 — Rozcestník</div>
+          <h2 data-cs="Kam dál" data-en="Where next">Kam dál</h2>
+          <p data-cs="Všechno na jednom místě — kód, balíčky i kontakt." data-en="Everything in one place — code, packages and contact.">Všechno na jednom místě — kód, balíčky i kontakt.</p>
+        </div>
+        <div class="links-grid">
+          <a class="link-card" href="https://github.com/helppc" target="_blank" rel="noopener">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.3-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.2-3.1-.12-.3-.52-1.48.11-3.08 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 5.82 0c2.22-1.5 3.19-1.18 3.19-1.18.63 1.6.24 2.78.12 3.07.75.82 1.2 1.85 1.2 3.11 0 4.43-2.7 5.4-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg></div>
+            <h3>GitHub</h3>
+            <p data-cs="Veškerý kód a open-source projekty organizace." data-en="All source code and the organization's open-source projects.">Veškerý kód a open-source projekty organizace.</p>
+            <span class="go">github.com/helppc →</span>
+          </a>
+
+          <a class="link-card" href="https://packagist.org/packages/helppc/" target="_blank" rel="noopener">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96 12 12l8.73-5.04M12 22V12"/></svg></div>
+            <h3>Packagist</h3>
+            <p data-cs="Composer balíčky HelpPC pro PHP a Symfony." data-en="HelpPC Composer packages for PHP and Symfony.">Composer balíčky HelpPC pro PHP a Symfony.</p>
+            <span class="go">packagist.org/packages/helppc →</span>
+          </a>
+
+          <a class="link-card" href="https://github.com/helppc" target="_blank" rel="noopener">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12h5M8 8h8M8 16h3"/></svg></div>
+            <h3>IdentityBundle <span class="pill" data-cs="brzy" data-en="soon">brzy</span></h3>
+            <p data-cs="Identity &amp; access management pro Symfony — uživatelé, role, ACL, REST API, GDPR." data-en="Identity &amp; access management for Symfony — users, roles, ACL, REST API, GDPR.">Identity &amp; access management pro Symfony — uživatelé, role, ACL, REST API, GDPR.</p>
+            <span class="go" data-cs="Sledovat na GitHubu →" data-en="Follow on GitHub →">Sledovat na GitHubu →</span>
+          </a>
+
+          <a class="link-card" href="mailto:jsem@tomaskulhanek.cz">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+            <h3 data-cs="Kontakt" data-en="Contact">Kontakt</h3>
+            <p data-cs="Máte dotaz nebo nápad na spolupráci? Napište." data-en="A question or an idea for collaboration? Get in touch.">Máte dotaz nebo nápad na spolupráci? Napište.</p>
+            <span class="go">jsem@tomaskulhanek.cz →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <img src="assets/helppc-logo-dark.svg" alt="HelpPC">
+      <div class="spacer"></div>
+      <p><span data-cs="Technologie, které pomáhají stavět." data-en="Technology that helps you build.">Technologie, které pomáhají stavět.</span> &nbsp;·&nbsp; © <span id="year">2026</span> HelpPC</p>
+      <a href="https://github.com/helppc" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var META = {
+        cs: {
+          title: 'HelpPC — Webové aplikace & knihovny pro vývojáře',
+          desc: 'HelpPC — otevřený software, znovupoužitelné knihovny a nástroje pro vývojáře. Rozcestník na GitHub, Packagist a projekty.'
+        },
+        en: {
+          title: 'HelpPC — Web apps & libraries for developers',
+          desc: 'HelpPC — open source, reusable libraries and tools for developers. A hub linking to GitHub, Packagist and projects.'
+        }
+      };
+      var nodes = document.querySelectorAll('[data-cs]');
+      var buttons = document.querySelectorAll('.lang button');
+
+      function apply(lang) {
+        if (lang !== 'cs' && lang !== 'en') lang = 'cs';
+        document.documentElement.lang = lang;
+        nodes.forEach(function (el) {
+          var val = el.getAttribute('data-' + lang);
+          if (val !== null) el.innerHTML = val;
+        });
+        document.title = META[lang].title;
+        var md = document.getElementById('meta-desc');
+        if (md) md.setAttribute('content', META[lang].desc);
+        buttons.forEach(function (b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-lang') === lang ? 'true' : 'false');
+        });
+        try { localStorage.setItem('helppc-lang', lang); } catch (e) {}
+      }
+
+      var saved = null;
+      try { saved = localStorage.getItem('helppc-lang'); } catch (e) {}
+      var initial = saved || ((navigator.language || 'cs').toLowerCase().indexOf('cs') === 0 ? 'cs' : 'en');
+      apply(initial);
+
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () { apply(b.getAttribute('data-lang')); });
+      });
+
+      var y = document.getElementById('year');
+      if (y) y.textContent = String(new Date().getFullYear());
+    })();
+  </script>
+</body>
+</html>
