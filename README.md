@@ -27,4 +27,4 @@ Loga se používají pouze z dodaných souborů (beze změn barev, deformací a 
 
 - GitHub — https://github.com/helppc
 - Packagist — https://packagist.org/packages/helppc/
-- Kontakt — jsem@tomaskulhanek.cz
+- Kontakt — info@helppc.cz
